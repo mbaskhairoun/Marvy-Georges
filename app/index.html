@@ -2,17 +2,77 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/jpeg" href="/initials.jpeg" />
+    <link rel="icon" type="image/webp" href="/initials.webp" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#0a0604" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Start downloading the envelope art the moment the HTML arrives,
+         in parallel with the JS bundle. By the time React mounts, the
+         browser cache already has these. -->
+    <link rel="preload" as="image" href="/envelop-body.webp" />
+    <link rel="preload" as="image" href="/envelop-flap.webp" />
+    <link rel="preload" as="image" href="/seal.webp" />
+    <link rel="preload" as="image" href="/initials.webp" />
+
     <title>Georges &amp; Marvy — An Engagement</title>
     <meta name="description" content="Join Georges and Marvy at The Hare Wine Co. — June 30, 2026." />
+    <style>
+      html,body { margin:0; padding:0; height:100%; background:#0a0604; }
+      /* A static splash visible BEFORE React mounts. Vanishes the instant
+         React renders the real #root content. */
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(ellipse at center, #1a0e07 0%, #0a0604 60%, #050302 100%);
+        color: #e8d4a8;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        z-index: 9999;
+      }
+      #boot-splash .mono {
+        width: 86px; height: 86px;
+        border: 1px solid rgba(200,160,90,0.4);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 20px;
+        animation: bs-pulse 2.4s ease-in-out infinite;
+      }
+      #boot-splash .mono span {
+        font-family: "Italiana", Georgia, serif;
+        font-size: 28px;
+        letter-spacing: 0.05em;
+        background: linear-gradient(135deg, #8a6a32, #e7c77a, #a8874a);
+        -webkit-background-clip: text;
+                background-clip: text;
+        color: transparent;
+      }
+      #boot-splash .tag {
+        font-style: italic;
+        letter-spacing: 0.25em;
+        font-size: 12px;
+        color: rgba(232,212,168,0.7);
+        text-transform: uppercase;
+      }
+      @keyframes bs-pulse {
+        0%,100% { transform: scale(1); opacity: 1; }
+        50%     { transform: scale(1.05); opacity: 0.8; }
+      }
+      /* React removes #boot-splash from the DOM on mount, so no extra JS
+         is needed to hide it. */
+    </style>
   </head>
   <body>
+    <div id="boot-splash">
+      <div class="mono"><span>G &amp; M</span></div>
+      <div class="tag">preparing your invitation</div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

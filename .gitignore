@@ -34,3 +34,7 @@ video_frames/
 
 # firebase local cache
 .firebase/
+
+# third-party reference material (turn.js flipbook sample)
+book-effect-20260421T182118Z-3-001/
+book-effect-20260421T182118Z-3-001.zip

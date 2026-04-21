@@ -79,12 +79,12 @@ function CornerFlourish({ flip = false }: { flip?: boolean }) {
 
 export default function PageCover() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-8 pt-14 pb-20">
+    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-6 pt-10 pb-14">
       {/* watermark */}
       <div
         className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.07]"
         style={{
-          backgroundImage: "url('/initials.jpeg')",
+          backgroundImage: "url('/initials.webp')",
           backgroundSize: "70%",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

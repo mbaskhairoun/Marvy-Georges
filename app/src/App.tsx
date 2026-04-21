@@ -1,4 +1,4 @@
-import { useState, Suspense, lazy } from "react";
+import { useState, Suspense, lazy, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const EnvelopeScene = lazy(() => import("./scenes/EnvelopeScene"));
@@ -11,6 +11,22 @@ import PageVenue from "./components/pages/PageVenue";
 import PageDresscode from "./components/pages/PageDresscode";
 import PageBar from "./components/pages/PageBar";
 import PageRSVP from "./components/pages/PageRSVP";
+
+// Venue images referenced inside the notebook pages. We kick off their
+// download as soon as the app mounts — while the user is still looking at
+// the envelope — so they're already cached when the notebook fades in.
+const NOTEBOOK_IMAGES = [
+  "/venue/entrance-wide.webp",
+  "/venue/cheers.webp",
+  "/venue/barrel-room-dark.webp",
+  "/venue/barrel-room.webp",
+  "/venue/entrance-day.webp",
+  "/venue/gate-night.webp",
+  "/venue/brick-arch.webp",
+  "/venue/hall-day.webp",
+  "/venue/hall-alt.webp",
+  "/venue/house.webp",
+];
 
 function Loader() {
   return (
@@ -27,6 +43,17 @@ function Loader() {
 
 export default function App() {
   const [opened, setOpened] = useState(false);
+
+  // Warm the browser cache with every notebook image during the envelope
+  // phase. Runs once on mount; each `new Image()` triggers a background
+  // fetch in parallel. By the time the notebook fades in, the files are
+  // already in memory and render instantly.
+  useEffect(() => {
+    NOTEBOOK_IMAGES.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   const pages = [
     <PageCover key="cover" />,

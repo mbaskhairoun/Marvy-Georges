@@ -75,7 +75,7 @@ function VineOrnament() {
 
 export default function PageWelcome() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-8 pt-14 pb-20">
+    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-6 pt-10 pb-14">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(60,30,10,0.12)_100%)]" />
 
       <div className="relative z-10 flex-1 flex flex-col items-center text-center">
@@ -109,7 +109,7 @@ export default function PageWelcome() {
           style={{ filter: "sepia(0.15) saturate(0.9)" }}
         >
           <img
-            src="/venue/cheers.png"
+            src="/venue/cheers.webp"
             alt="cheers"
             className="w-full h-full object-cover"
           />

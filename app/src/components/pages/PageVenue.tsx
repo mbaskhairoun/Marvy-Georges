@@ -46,7 +46,7 @@ function GoldDivider({ width = 180 }: { width?: number }) {
 
 export default function PageVenue() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-8 pt-14 pb-20">
+    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-6 pt-10 pb-14">
       <div className="relative z-10 flex-1 flex flex-col items-center text-center">
         <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-3">
           The Place
@@ -59,7 +59,7 @@ export default function PageVenue() {
           style={{ filter: "sepia(0.15) saturate(0.9)" }}
         >
           <img
-            src="/venue/entrance-wide.png"
+            src="/venue/entrance-wide.webp"
             alt="The Hare Wine Co. entrance"
             className="w-full h-full object-cover"
           />

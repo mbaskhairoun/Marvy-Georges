@@ -11,7 +11,7 @@ export interface EnvelopeSceneProps {
 // Both PNGs are 1408×768 (aspect ≈ 1.833:1). Body and flap share the same
 // canvas so they must render at identical size and position — the alpha in
 // each PNG does the silhouette work.
-const BODY_W = 3.3;
+const BODY_W = 4.0;
 const BODY_H = BODY_W / (1408 / 768);  // ≈ 1.80
 const FLAP_W = BODY_W;
 const FLAP_H = BODY_H;
@@ -21,7 +21,7 @@ const FLAP_H = BODY_H;
 // -----------------------------------------------------------------------------
 function WaxSeal() {
   const groupRef = useRef<THREE.Group>(null);
-  const sealTex = useTexture('/seal.png');
+  const sealTex = useTexture('/seal.webp');
 
   // Sharper rendering on retina, correct gamma
   useMemo(() => {
@@ -41,7 +41,7 @@ function WaxSeal() {
   return (
     <group ref={groupRef} position={[0, -FLAP_H * 0.46, 0.02]}>
       <mesh renderOrder={3}>
-        <planeGeometry args={[0.58, 0.58]} />
+        <planeGeometry args={[0.7, 0.7]} />
         <meshBasicMaterial
           map={sealTex}
           transparent
@@ -60,7 +60,7 @@ function TriangularFlap({ opening, children }: { opening: boolean; children?: Re
   const hingeRef = useRef<THREE.Group>(null);
   const [rot, setRot] = useState(0);
 
-  const flapTex = useTexture('/envelop-flap.png');
+  const flapTex = useTexture('/envelop-flap.webp');
   useMemo(() => {
     if (flapTex) {
       flapTex.anisotropy = 16;
@@ -107,7 +107,7 @@ function TriangularFlap({ opening, children }: { opening: boolean; children?: Re
 // Envelope body — textured plane
 // -----------------------------------------------------------------------------
 function EnvelopeBody() {
-  const bodyTex = useTexture('/envelop-body.png');
+  const bodyTex = useTexture('/envelop-body.webp');
   useMemo(() => {
     if (bodyTex) {
       bodyTex.anisotropy = 16;
@@ -289,7 +289,6 @@ export default function EnvelopeScene(props: EnvelopeSceneProps): JSX.Element {
             camera={{ position: [0, -0.2, 5], fov: 38 }}
             dpr={[1, 2]}
             gl={{ antialias: true, alpha: true }}
-            shadows
           >
             <Suspense fallback={null}>
               <ambientLight intensity={0.55} />
@@ -339,7 +338,6 @@ export default function EnvelopeScene(props: EnvelopeSceneProps): JSX.Element {
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   );
 }
