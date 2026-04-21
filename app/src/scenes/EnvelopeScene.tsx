@@ -1,6 +1,6 @@
 import { useRef, useState, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { RoundedBox, Environment, useTexture } from '@react-three/drei';
+import { Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 
@@ -8,186 +8,45 @@ export interface EnvelopeSceneProps {
   onOpened: () => void;
 }
 
-const BODY_W = 3.0;
-const BODY_H = 2.1;
-const BODY_D = 0.08;
-const FLAP_W = BODY_W / 2;   // half-width of triangle base (hinge length = BODY_W)
-const FLAP_H = 1.05;         // tip drops to ~middle of body
+// Both PNGs are 1408×768 (aspect ≈ 1.833:1). Body and flap share the same
+// canvas so they must render at identical size and position — the alpha in
+// each PNG does the silhouette work.
+const BODY_W = 3.3;
+const BODY_H = BODY_W / (1408 / 768);  // ≈ 1.80
+const FLAP_W = BODY_W;
+const FLAP_H = BODY_H;
 
 // -----------------------------------------------------------------------------
-// Wax Seal — gold disk with monogram texture clearly visible on top
+// Wax Seal — single PNG (/seal.png) rendered on a transparent plane.
 // -----------------------------------------------------------------------------
-function WaxSeal({ opening }: { opening: boolean }) {
+function WaxSeal() {
   const groupRef = useRef<THREE.Group>(null);
-  const monoRef = useRef<THREE.Mesh>(null);
-  const [progress, setProgress] = useState(0);
+  const sealTex = useTexture('/seal.png');
 
-  const texture = useTexture('/initials.jpeg');
-
-  // Recolor the blue-on-cream monogram into a wax-toned emboss: dark parts of
-  // the original (the initials) become bright wax highlight, light parts become
-  // a deep wax recess. We also build a matching height map for bump emboss.
-  const { embossMap } = useMemo(() => {
-    if (!texture?.image) return { embossMap: texture, embossBump: texture };
-    const img = texture.image as HTMLImageElement | ImageBitmap;
-    const w = (img as HTMLImageElement).naturalWidth || (img as ImageBitmap).width || 512;
-    const h = (img as HTMLImageElement).naturalHeight || (img as ImageBitmap).height || 512;
-
-    const colorCanvas = document.createElement('canvas');
-    colorCanvas.width = w;
-    colorCanvas.height = h;
-    const cctx = colorCanvas.getContext('2d');
-
-    const bumpCanvas = document.createElement('canvas');
-    bumpCanvas.width = w;
-    bumpCanvas.height = h;
-    const bctx = bumpCanvas.getContext('2d');
-
-    if (!cctx || !bctx) return { embossMap: texture, embossBump: texture };
-
-    cctx.drawImage(img as CanvasImageSource, 0, 0, w, h);
-    const src = cctx.getImageData(0, 0, w, h);
-    const bump = bctx.createImageData(w, h);
-    const dst = src.data;
-    const bd = bump.data;
-
-    // Wax color stops (deep recess → bright highlight) with strong contrast
-    const DARK = { r: 0x20, g: 0x0e, b: 0x02 };
-    const MID = { r: 0x8e, g: 0x54, b: 0x18 };
-    const BRIGHT = { r: 0xff, g: 0xdd, b: 0x88 };
-
-    for (let i = 0; i < dst.length; i += 4) {
-      const lum = (dst[i] * 0.3 + dst[i + 1] * 0.59 + dst[i + 2] * 0.11) / 255;
-      // Invert + strong gamma so the initials dominate the disc.
-      const t = Math.pow(1 - lum, 0.5);
-      let r: number, g: number, b: number;
-      if (t < 0.5) {
-        const k = t * 2;
-        r = DARK.r + (MID.r - DARK.r) * k;
-        g = DARK.g + (MID.g - DARK.g) * k;
-        b = DARK.b + (MID.b - DARK.b) * k;
-      } else {
-        const k = (t - 0.5) * 2;
-        r = MID.r + (BRIGHT.r - MID.r) * k;
-        g = MID.g + (BRIGHT.g - MID.g) * k;
-        b = MID.b + (BRIGHT.b - MID.b) * k;
-      }
-      dst[i] = r;
-      dst[i + 1] = g;
-      dst[i + 2] = b;
-      dst[i + 3] = 255;
-
-      const bv = Math.floor(t * 255);
-      bd[i] = bv;
-      bd[i + 1] = bv;
-      bd[i + 2] = bv;
-      bd[i + 3] = 255;
+  // Sharper rendering on retina, correct gamma
+  useMemo(() => {
+    if (sealTex) {
+      sealTex.anisotropy = 16;
+      sealTex.colorSpace = THREE.SRGBColorSpace;
+      sealTex.needsUpdate = true;
     }
-    cctx.putImageData(src, 0, 0);
-    bctx.putImageData(bump, 0, 0);
+  }, [sealTex]);
 
-    const colorTex = new THREE.CanvasTexture(colorCanvas);
-    colorTex.colorSpace = THREE.SRGBColorSpace;
-    colorTex.anisotropy = 16;
-    colorTex.needsUpdate = true;
-
-    const bumpTex = new THREE.CanvasTexture(bumpCanvas);
-    bumpTex.anisotropy = 16;
-    bumpTex.needsUpdate = true;
-
-    return { embossMap: colorTex, embossBump: bumpTex };
-  }, [texture]);
-
-  // Procedural bump for the wax surface so it doesn't read as plastic.
-  const waxBump = useMemo(() => {
-    const size = 128;
-    const data = new Uint8Array(size * size * 4);
-    for (let i = 0; i < size * size; i++) {
-      const n = 170 + Math.floor(Math.random() * 80);
-      data[i * 4 + 0] = n;
-      data[i * 4 + 1] = n;
-      data[i * 4 + 2] = n;
-      data[i * 4 + 3] = 255;
-    }
-    const tex = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
-    tex.needsUpdate = true;
-    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    return tex;
-  }, []);
-
-  // Clean annular ring — perfectly circular outer + inner; no wobble.
-  const rimShape = useMemo(() => {
-    const s = new THREE.Shape();
-    s.absarc(0, 0, 0.255, 0, Math.PI * 2, false);
-    const hole = new THREE.Path();
-    hole.absarc(0, 0, 0.238, 0, Math.PI * 2, true);
-    s.holes.push(hole);
-    return s;
-  }, []);
-
-  useFrame((_, delta) => {
-    if (opening) setProgress((p) => Math.min(1, p + delta * 0.8));
-    const p = progress;
+  useFrame(() => {
     if (groupRef.current) {
-      const pulse = p < 0.2 ? 1 + p * 1.4 : 1.28 - (p - 0.2) * 1.6;
-      groupRef.current.scale.setScalar(Math.max(0.001, pulse));
-      groupRef.current.rotation.z = -0.14 + p * 0.7; // slight natural tilt
-    }
-    if (monoRef.current) {
-      const mat = monoRef.current.material as THREE.MeshStandardMaterial;
-      mat.opacity = 1 - Math.max(0, (p - 0.4)) * 1.7;
-      mat.transparent = true;
+      groupRef.current.rotation.z = -0.14;
     }
   });
 
   return (
-    <group ref={groupRef} position={[0, -FLAP_H + 0.14, 0.065]}>
-      {/* Raised ridge — the only outer form now; acts as the seal's perimeter */}
-      <mesh position={[0, 0, 0]} castShadow receiveShadow>
-        <extrudeGeometry
-          args={[
-            rimShape,
-            {
-              depth: 0.018,
-              bevelEnabled: true,
-              bevelThickness: 0.012,
-              bevelSize: 0.012,
-              bevelSegments: 3,
-              curveSegments: 24,
-            },
-          ]}
-        />
-        <meshStandardMaterial
-          color="#b47a2a"
-          metalness={0.2}
-          roughness={0.5}
-          bumpMap={waxBump}
-          bumpScale={0.04}
-          emissive="#3a1d06"
-          emissiveIntensity={0.35}
-        />
-      </mesh>
-
-      {/* Recessed well inside the ridge — darker wax behind the monogram */}
-      <mesh position={[0, 0, 0.001]}>
-        <circleGeometry args={[0.243, 64]} />
-        <meshStandardMaterial
-          color="#5e340d"
-          metalness={0.1}
-          roughness={0.7}
-          emissive="#1e0e04"
-          emissiveIntensity={0.35}
-        />
-      </mesh>
-
-      {/* Monogram — floats inside the ring hole, slightly tilted CCW */}
-      <mesh ref={monoRef} position={[0, 0, 0.05]} rotation={[0, 0, 0.08]} renderOrder={2}>
-        <circleGeometry args={[0.235, 64]} />
+    <group ref={groupRef} position={[0, -FLAP_H * 0.46, 0.02]}>
+      <mesh renderOrder={3}>
+        <planeGeometry args={[0.58, 0.58]} />
         <meshBasicMaterial
-          map={embossMap}
-          color="#ffffff"
-          toneMapped={false}
+          map={sealTex}
           transparent
+          toneMapped={false}
+          depthWrite={false}
         />
       </mesh>
     </group>
@@ -201,18 +60,17 @@ function TriangularFlap({ opening, children }: { opening: boolean; children?: Re
   const hingeRef = useRef<THREE.Group>(null);
   const [rot, setRot] = useState(0);
 
-  const shape = useMemo(() => {
-    const s = new THREE.Shape();
-    s.moveTo(-FLAP_W, 0);
-    s.lineTo(FLAP_W, 0);
-    s.lineTo(0, -FLAP_H);
-    s.lineTo(-FLAP_W, 0);
-    return s;
-  }, []);
+  const flapTex = useTexture('/envelop-flap.png');
+  useMemo(() => {
+    if (flapTex) {
+      flapTex.anisotropy = 16;
+      flapTex.colorSpace = THREE.SRGBColorSpace;
+      flapTex.needsUpdate = true;
+    }
+  }, [flapTex]);
 
   useFrame((_, delta) => {
     if (opening) {
-      // Stop well before the interior is revealed; very slow ease-out.
       const target = -(42 * Math.PI) / 180;
       setRot((r) => r + (target - r) * Math.min(1, delta * 0.45));
     }
@@ -221,52 +79,24 @@ function TriangularFlap({ opening, children }: { opening: boolean; children?: Re
     }
   });
 
-  // Single front-face triangle outline, nudged only slightly in front of the
-  // flap's front face. No back-face edges, so nothing can draw on top of the
-  // seal above it.
-  const edgeMat = useMemo(
-    () =>
-      new THREE.LineBasicMaterial({
-        color: 0x5a3a22,
-        transparent: false,
-        depthWrite: true,
-        depthTest: true,
-      }),
-    []
-  );
-
-  const edgeLines = useMemo(() => {
-    const z = 0.0605; // flap depth is 0.06; sit 0.5mm in front
-    const pts = [
-      new THREE.Vector3(-FLAP_W, 0, z),
-      new THREE.Vector3(FLAP_W, 0, z),
-      new THREE.Vector3(0, -FLAP_H, z),
-      new THREE.Vector3(-FLAP_W, 0, z),
-    ];
-    const geom = new THREE.BufferGeometry().setFromPoints(pts);
-    return new THREE.Line(geom, edgeMat);
-  }, [edgeMat]);
-
-  // Hinge group is positioned at the TOP edge of the body (y = +BODY_H/2),
-  // slightly in front of the body face so it sits cleanly on top.
+  // The flap plane has the SAME dimensions and center as the body plane, so
+  // the two PNGs overlap pixel-for-pixel. We park the hinge group at the
+  // body's top edge so rotation pivots there; the plane is shifted down by
+  // BODY_H/2 inside the hinge so its centre sits on the body centre.
   return (
-    <group position={[0, BODY_H / 2, BODY_D / 2 + 0.001]}>
+    <group position={[0, BODY_H / 2, 0.04]}>
       <group ref={hingeRef}>
-        {/* Triangular flap mesh — thicker so sides are visibly 3D */}
-        <mesh castShadow receiveShadow>
-          <extrudeGeometry
-            args={[shape, { depth: 0.06, bevelEnabled: false, curveSegments: 8 }]}
-          />
-          <meshStandardMaterial
-            color="#f0e3c8"
-            roughness={0.94}
-            metalness={0.02}
+        <mesh position={[0, -FLAP_H / 2, 0]} renderOrder={1}>
+          <planeGeometry args={[FLAP_W, FLAP_H]} />
+          <meshBasicMaterial
+            map={flapTex}
+            transparent
+            toneMapped={false}
+            depthWrite={false}
             side={THREE.DoubleSide}
           />
         </mesh>
-        {/* Real edge silhouette — traces the triangle's actual edges */}
-        <primitive object={edgeLines} />
-        {/* Wax seal travels with the flap so it sits on its tip */}
+        {/* Wax seal travels with the flap */}
         {children}
       </group>
     </group>
@@ -274,28 +104,28 @@ function TriangularFlap({ opening, children }: { opening: boolean; children?: Re
 }
 
 // -----------------------------------------------------------------------------
-// Envelope body + back triangular seams (suggesting where side flaps meet)
+// Envelope body — textured plane
 // -----------------------------------------------------------------------------
 function EnvelopeBody() {
-  // Two diagonal "seam" lines on the back of the envelope going from the
-  // top-left and top-right corners down to the bottom-center, forming the
-  // classic envelope V pattern that is normally hidden behind the flap.
+  const bodyTex = useTexture('/envelop-body.png');
+  useMemo(() => {
+    if (bodyTex) {
+      bodyTex.anisotropy = 16;
+      bodyTex.colorSpace = THREE.SRGBColorSpace;
+      bodyTex.needsUpdate = true;
+    }
+  }, [bodyTex]);
+
   return (
-    <group>
-      <RoundedBox
-        args={[BODY_W, BODY_H, BODY_D]}
-        radius={0.04}
-        smoothness={4}
-        castShadow
-        receiveShadow
-      >
-        <meshStandardMaterial
-          color="#f0e3c8"
-          roughness={0.94}
-          metalness={0.02}
-        />
-      </RoundedBox>
-    </group>
+    <mesh renderOrder={0}>
+      <planeGeometry args={[BODY_W, BODY_H]} />
+      <meshBasicMaterial
+        map={bodyTex}
+        transparent
+        toneMapped={false}
+        depthWrite={false}
+      />
+    </mesh>
   );
 }
 
@@ -325,7 +155,7 @@ function Envelope({ opening, onTap }: { opening: boolean; onTap: () => void }) {
       <EnvelopeBody />
       <TriangularFlap opening={opening}>
         <group position={[0, 0, 0.014]}>
-          <WaxSeal opening={opening} />
+          <WaxSeal />
         </group>
       </TriangularFlap>
     </group>

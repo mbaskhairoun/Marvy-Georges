@@ -5,8 +5,8 @@ import {
   useMotionValue,
   useTransform,
   animate,
-  PanInfo,
 } from "framer-motion";
+import { useDrag } from "@use-gesture/react";
 
 interface NotebookProps {
   pages: React.ReactNode[];
@@ -143,25 +143,24 @@ export default function Notebook({ pages }: NotebookProps) {
     animate(dragX, 0, { type: "spring", stiffness: 280, damping: 30 });
   };
 
-  const onPanStart = () => {
-    if (lockRef.current) return;
-    setHasInteracted(true);
-  };
-
-  const onPan = (_: unknown, info: PanInfo) => {
-    if (lockRef.current) return;
-    // Only horizontal motion drives the flip
-    dragX.set(info.offset.x);
-  };
-
-  const onPanEnd = (_: unknown, info: PanInfo) => {
-    if (lockRef.current) return;
-    const dx = info.offset.x;
-    const vx = info.velocity.x;
-    if (dx < -COMMIT_THRESHOLD || vx < -VELOCITY_COMMIT) commit("next");
-    else if (dx > COMMIT_THRESHOLD || vx > VELOCITY_COMMIT) commit("prev");
-    else releaseToRest();
-  };
+  const bind = useDrag(
+    ({ movement: [mx], velocity: [vx], first, last, tap }) => {
+      if (lockRef.current) return;
+      if (first) setHasInteracted(true);
+      if (tap) return; // ignore pure taps — the separate onClick handles those
+      dragX.set(mx);
+      if (last) {
+        const vxPxPerMs = vx * 1000; // @use-gesture gives px/ms
+        if (mx < -COMMIT_THRESHOLD || vxPxPerMs < -VELOCITY_COMMIT) commit("next");
+        else if (mx > COMMIT_THRESHOLD || vxPxPerMs > VELOCITY_COMMIT) commit("prev");
+        else releaseToRest();
+      }
+    },
+    {
+      filterTaps: true,
+      pointer: { touch: true },
+    }
+  );
 
   const onTap = (e: React.MouseEvent<HTMLDivElement>) => {
     if (lockRef.current) return;
@@ -177,7 +176,11 @@ export default function Notebook({ pages }: NotebookProps) {
   const prevPage = pages[index - 1];
 
   return (
-    <div className="relative w-full h-[100dvh] flex items-center justify-center overflow-hidden">
+    <div
+      {...bind()}
+      className="notebook-root relative w-full h-[100dvh] flex items-center justify-center overflow-hidden"
+      style={{ touchAction: "none" }}
+    >
       {/* Warm leather/wood backdrop */}
       <div
         className="absolute inset-0"
@@ -225,10 +228,10 @@ export default function Notebook({ pages }: NotebookProps) {
             </motion.div>
           )}
 
-          {/* Active (top) page — drives the flip */}
+          {/* Active (top) page — purely visual, no gesture handlers here. */}
           <motion.div
             key={`page-${index}`}
-            className="absolute inset-0 will-change-transform select-none"
+            className="absolute inset-0 will-change-transform select-none pointer-events-none"
             style={{
               transformStyle: "preserve-3d",
               transformOrigin: "left center",
@@ -236,9 +239,6 @@ export default function Notebook({ pages }: NotebookProps) {
               z: liftZ,
               zIndex: 10,
             }}
-            onPanStart={onPanStart}
-            onPan={onPan}
-            onPanEnd={onPanEnd}
           >
             <PageFront>{currentPage}</PageFront>
             <PageBack pageNum={index} />
@@ -253,6 +253,7 @@ export default function Notebook({ pages }: NotebookProps) {
               }}
             />
           </motion.div>
+
         </div>
 
         {/* swipe / tap hint */}

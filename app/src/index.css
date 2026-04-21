@@ -59,3 +59,17 @@ body {
 .notebook-perspective { perspective: 1800px; -webkit-perspective: 1800px; }
 .page-3d { transform-style: preserve-3d; -webkit-transform-style: preserve-3d; will-change: transform; }
 .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+
+/* Force touch-action: none on every descendant so the browser never
+   intercepts swipes for scroll / zoom / back-nav, and ensure no element
+   hijacks the drag by making itself draggable. */
+.notebook-root,
+.notebook-root * {
+  touch-action: none !important;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.notebook-root img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
