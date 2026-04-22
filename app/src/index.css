@@ -60,6 +60,14 @@ body {
 .page-3d { transform-style: preserve-3d; -webkit-transform-style: preserve-3d; will-change: transform; }
 .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 
+/* page-flip clones the current page to animate the curl. The clone is the
+   "back" of the flipping corner — blank it out so the curl reveals empty
+   paper instead of duplicating the front content. The paper-bg wrapper
+   (first child of .stf__item) stays visible; everything inside it is hidden. */
+.notebook-root [data-flip-clone="true"] > * > * {
+  visibility: hidden !important;
+}
+
 /* Force touch-action: none on every descendant so the browser never
    intercepts swipes for scroll / zoom / back-nav, and ensure no element
    hijacks the drag by making itself draggable. */
