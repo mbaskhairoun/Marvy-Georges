@@ -75,18 +75,18 @@ function VineOrnament() {
 
 export default function PageWelcome() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-6 pt-10 pb-14">
+    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(60,30,10,0.12)_100%)]" />
 
-      <div className="relative z-10 flex-1 flex flex-col items-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-3">
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col items-center text-center">
+        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
           Chapter One
         </p>
 
-        <div className="h-px w-16 bg-rust-600/20 mb-6" />
+        <div className="h-px w-14 bg-rust-600/20 mb-3" />
 
         <h2
-          className="font-display text-ink-900 text-5xl sm:text-6xl leading-[1.02] mb-5"
+          className="font-display text-ink-900 text-[2.25rem] sm:text-5xl leading-[1.02] mb-3"
           style={{ letterSpacing: "-0.01em" }}
         >
           A love story,
@@ -94,18 +94,18 @@ export default function PageWelcome() {
           uncorked.
         </h2>
 
-        <div className="mb-6">
-          <GoldDivider width={160} />
+        <div className="mb-3">
+          <GoldDivider width={150} />
         </div>
 
-        <p className="font-serif italic text-ink-700 text-[15px] leading-relaxed mb-7 max-w-[22rem]">
+        <p className="font-serif italic text-ink-700 text-[13.5px] leading-snug mb-3 max-w-[22rem]">
           We fell in love slowly, and then all at once. Please celebrate
           with us among barrels, brick, and candlelight — somewhere
           beautiful between the vines and the lake.
         </p>
 
         <div
-          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg h-[40vh] min-h-[220px] w-full"
+          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg flex-1 min-h-0 w-full"
           style={{ filter: "sepia(0.15) saturate(0.9)" }}
         >
           <img
@@ -116,17 +116,13 @@ export default function PageWelcome() {
           <div className="absolute inset-0 ring-1 ring-inset ring-cream-100/40 rounded-2xl pointer-events-none" />
         </div>
 
-        <div className="mt-5 mb-2">
+        <div className="mt-3 mb-1">
           <VineOrnament />
         </div>
 
-        <p className="font-hand text-3xl text-rust-500 leading-tight">
+        <p className="font-hand text-2xl text-rust-500 leading-tight">
           a toast to forever
         </p>
-      </div>
-
-      <div className="relative z-10 text-center pt-3">
-        <p className="font-serif italic text-xs text-ink-700/60">II</p>
       </div>
     </div>
   );

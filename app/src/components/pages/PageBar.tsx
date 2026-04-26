@@ -95,16 +95,16 @@ function WineGlassIcon() {
 
 export default function PageBar() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-6 pt-10 pb-14">
-      <div className="relative z-10 flex-1 flex flex-col items-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-3">
+    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col items-center text-center">
+        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
           Libations
         </p>
 
-        <div className="h-px w-16 bg-rust-600/20 mb-5" />
+        <div className="h-px w-14 bg-rust-600/20 mb-3" />
 
         <div
-          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg h-[32vh] min-h-[190px] w-full mb-6"
+          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg flex-1 min-h-[140px] w-full mb-3"
           style={{ filter: "sepia(0.15) saturate(0.9)" }}
         >
           <img
@@ -121,30 +121,24 @@ export default function PageBar() {
         </div>
 
         <h2
-          className="font-display text-ink-900 text-5xl sm:text-6xl leading-[1]"
+          className="font-display text-ink-900 text-[2.25rem] sm:text-5xl leading-[1]"
           style={{ letterSpacing: "-0.01em" }}
         >
           An Open Bar
         </h2>
 
-        <div className="my-5">
-          <GoldDivider width={160} />
+        <div className="my-3">
+          <GoldDivider width={150} />
         </div>
 
-        <p className="font-serif italic text-ink-700 text-[15px] leading-relaxed max-w-[22rem]">
+        <p className="font-serif italic text-ink-700 text-[13.5px] leading-snug max-w-[22rem]">
           Wines from the house, cocktails by the barrel, and toasts all
           around. Come thirsty, leave merry.
         </p>
 
-        <p className="font-hand text-3xl text-rust-600 mt-6">
-          all evening, on us
+        <p className="font-hand text-2xl text-rust-600 mt-3">
+          to love &amp; long pours
         </p>
-
-        <div className="h-px w-24 bg-rust-600/20 mt-7" />
-      </div>
-
-      <div className="relative z-10 text-center pt-3">
-        <p className="font-serif italic text-xs text-ink-700/60">VI</p>
       </div>
     </div>
   );

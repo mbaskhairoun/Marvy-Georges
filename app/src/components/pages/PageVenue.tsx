@@ -46,16 +46,16 @@ function GoldDivider({ width = 180 }: { width?: number }) {
 
 export default function PageVenue() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-6 pt-10 pb-14">
-      <div className="relative z-10 flex-1 flex flex-col items-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-3">
+    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col items-center text-center">
+        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
           The Place
         </p>
 
-        <div className="h-px w-16 bg-rust-600/20 mb-5" />
+        <div className="h-px w-14 bg-rust-600/20 mb-3" />
 
         <div
-          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg h-[35vh] min-h-[200px] w-full mb-6"
+          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg flex-1 min-h-[140px] w-full mb-4"
           style={{ filter: "sepia(0.15) saturate(0.9)" }}
         >
           <img
@@ -67,7 +67,7 @@ export default function PageVenue() {
         </div>
 
         <h2
-          className="font-display text-ink-900 text-4xl sm:text-5xl leading-[1.05]"
+          className="font-display text-ink-900 text-[2rem] sm:text-4xl leading-[1.05]"
           style={{ letterSpacing: "-0.01em" }}
         >
           The Hare
@@ -75,17 +75,17 @@ export default function PageVenue() {
           Wine Co.
         </h2>
 
-        <div className="my-5">
-          <GoldDivider width={150} />
+        <div className="my-3">
+          <GoldDivider width={140} />
         </div>
 
         <p className="text-[10px] tracking-[0.35em] uppercase text-ink-900 font-serif leading-relaxed max-w-[20rem]">
           {invitation.venue.address}
         </p>
 
-        <div className="h-px w-24 bg-rust-600/20 my-5" />
+        <div className="h-px w-20 bg-rust-600/20 my-3" />
 
-        <p className="font-serif italic text-ink-700 text-[15px] leading-relaxed max-w-[22rem]">
+        <p className="font-serif italic text-ink-700 text-[13.5px] leading-snug max-w-[22rem]">
           A rustic winery wrapped in brick, barrels, and string lights
           on the Niagara Peninsula.
         </p>
@@ -94,14 +94,10 @@ export default function PageVenue() {
           href={invitation.venue.mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-7 inline-flex items-center justify-center px-6 py-2.5 rounded-full border border-rust-600 text-rust-600 text-[11px] tracking-[0.35em] uppercase font-sans hover:bg-rust-600/10 transition-colors"
+          className="mt-4 inline-flex items-center justify-center px-5 py-2 rounded-full border border-rust-600 text-rust-600 text-[11px] tracking-[0.35em] uppercase font-sans hover:bg-rust-600/10 transition-colors"
         >
           Open in Maps
         </a>
-      </div>
-
-      <div className="relative z-10 text-center pt-3">
-        <p className="font-serif italic text-xs text-ink-700/60">IV</p>
       </div>
     </div>
   );

@@ -71,7 +71,7 @@ function TriangularFlap({ opening, children }: { opening: boolean; children?: Re
 
   useFrame((_, delta) => {
     if (opening) {
-      const target = -(42 * Math.PI) / 180;
+      const target = -(62 * Math.PI) / 180;
       setRot((r) => r + (target - r) * Math.min(1, delta * 0.45));
     }
     if (hingeRef.current) {
@@ -84,7 +84,7 @@ function TriangularFlap({ opening, children }: { opening: boolean; children?: Re
   // body's top edge so rotation pivots there; the plane is shifted down by
   // BODY_H/2 inside the hinge so its centre sits on the body centre.
   return (
-    <group position={[0, BODY_H / 2, 0.04]}>
+    <group position={[0, BODY_H / 2 - 0.08, 0.04]}>
       <group ref={hingeRef}>
         <mesh position={[0, -FLAP_H / 2, 0]} renderOrder={1}>
           <planeGeometry args={[FLAP_W, FLAP_H]} />
