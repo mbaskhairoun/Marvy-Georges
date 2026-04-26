@@ -81,3 +81,58 @@ body {
   -webkit-user-drag: none;
   user-drag: none;
 }
+
+.notebook-nav-button {
+  position: absolute;
+  top: 50%;
+  z-index: 70;
+  width: 56px;
+  height: 72px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(231, 199, 122, 0.9);
+  background: rgba(20, 10, 5, 0.18);
+  border: 1px solid rgba(231, 199, 122, 0.18);
+  border-radius: 9999px;
+  transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
+  touch-action: manipulation !important;
+}
+
+.notebook-nav-button:hover {
+  color: #e7c77a;
+  background: rgba(20, 10, 5, 0.28);
+}
+
+.notebook-nav-button:active {
+  color: #fff8e8;
+  transform: translateY(-50%) scale(0.96);
+}
+
+.notebook-tap-zone {
+  position: absolute;
+  top: 50%;
+  z-index: 60;
+  width: clamp(64px, 22vw, 112px);
+  height: min(76dvh, 620px);
+  transform: translateY(-50%);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation !important;
+}
+
+@media (max-width: 520px) {
+  .notebook-nav-button {
+    width: 52px;
+    height: 68px;
+    background: rgba(20, 10, 5, 0.24);
+  }
+
+  .notebook-tap-zone {
+    width: clamp(72px, 28vw, 120px);
+    height: 86dvh;
+  }
+}

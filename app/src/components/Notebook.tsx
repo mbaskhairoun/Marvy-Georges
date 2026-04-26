@@ -1,5 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from "react";
-// @ts-ignore - react-pageflip ships no TS types
+import React, { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import HTMLFlipBook from "react-pageflip";
 
 interface NotebookProps {
@@ -23,20 +22,78 @@ export default function Notebook({ pages }: NotebookProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const originalsRef = useRef<Set<Element>>(new Set());
   const observerRef = useRef<MutationObserver | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const lastFlipAtRef = useRef(0);
   const [size, setSize] = useState({ w: 360, h: 620 });
   const [currentPage, setCurrentPage] = useState(0);
 
-  const flipPrev = () => {
-    const api = (bookRef.current as { pageFlip?: () => unknown } | null)?.pageFlip?.() as
-      | { flipPrev?: () => void }
-      | undefined;
-    api?.flipPrev?.();
+  const isInteractiveTarget = (target: EventTarget | null) =>
+    target instanceof HTMLElement &&
+    Boolean(target.closest("a, button, input, textarea, select, label"));
+
+  const canFlipNow = () => {
+    const now = Date.now();
+    if (now - lastFlipAtRef.current < 260) return false;
+    lastFlipAtRef.current = now;
+    return true;
   };
-  const flipNext = () => {
+
+  const flipPrev = useCallback(() => {
+    if (!canFlipNow()) return;
     const api = (bookRef.current as { pageFlip?: () => unknown } | null)?.pageFlip?.() as
-      | { flipNext?: () => void }
+      | { flipPrev?: (corner?: "top" | "bottom") => void }
       | undefined;
-    api?.flipNext?.();
+    api?.flipPrev?.("bottom");
+  }, []);
+
+  const flipNext = useCallback(() => {
+    if (!canFlipNow()) return;
+    const api = (bookRef.current as { pageFlip?: () => unknown } | null)?.pageFlip?.() as
+      | { flipNext?: (corner?: "top" | "bottom") => void }
+      | undefined;
+    api?.flipNext?.("bottom");
+  }, []);
+
+  const handleTapZone = useCallback(
+    (direction: "prev" | "next") => (event: React.PointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (direction === "prev") flipPrev();
+      else flipNext();
+    },
+    [flipNext, flipPrev]
+  );
+
+  const handleTouchStartCapture = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (isInteractiveTarget(event.target) || event.touches.length !== 1) {
+      touchStartRef.current = null;
+      return;
+    }
+
+    const touch = event.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    };
+  };
+
+  const handleTouchEndCapture = (event: React.TouchEvent<HTMLDivElement>) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start || isInteractiveTarget(event.target) || event.changedTouches.length !== 1) return;
+
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - start.x;
+    const dy = Math.abs(touch.clientY - start.y);
+    const elapsed = Date.now() - start.time;
+
+    if (Math.abs(dx) < 34 || dy > 82 || elapsed > 850) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    if (dx > 0) flipPrev();
+    else flipNext();
   };
 
   // Size the book to fill most of the viewport so the content pages —
@@ -91,6 +148,8 @@ export default function Notebook({ pages }: NotebookProps) {
     <div
       ref={rootRef}
       className="notebook-root relative w-full h-[100dvh] flex items-center justify-center overflow-hidden"
+      onTouchStartCapture={handleTouchStartCapture}
+      onTouchEndCapture={handleTouchEndCapture}
     >
       {/* Dark leather backdrop */}
       <div
@@ -112,7 +171,6 @@ export default function Notebook({ pages }: NotebookProps) {
         }}
       />
 
-      {/* @ts-ignore react-pageflip has no ts types */}
       <HTMLFlipBook
         ref={bookRef}
         width={size.w}
@@ -132,7 +190,7 @@ export default function Notebook({ pages }: NotebookProps) {
         autoSize={false}
         clickEventForward={true}
         useMouseEvents={true}
-        swipeDistance={24}
+        swipeDistance={16}
         showPageCorners={true}
         disableFlipByClick={false}
         className=""
@@ -146,6 +204,23 @@ export default function Notebook({ pages }: NotebookProps) {
         ))}
       </HTMLFlipBook>
 
+      {currentPage > 0 && (
+        <button
+          type="button"
+          aria-label="Previous page"
+          onPointerUp={handleTapZone("prev")}
+          className="notebook-tap-zone left-0"
+        />
+      )}
+      {currentPage < pages.length - 1 && (
+        <button
+          type="button"
+          aria-label="Next page"
+          onPointerUp={handleTapZone("next")}
+          className="notebook-tap-zone right-0"
+        />
+      )}
+
       {/* Side nav chevrons — provide a dependable flip affordance when the
           corner drag / swipe gesture is hard to discover. */}
       {currentPage > 0 && (
@@ -153,7 +228,7 @@ export default function Notebook({ pages }: NotebookProps) {
           type="button"
           aria-label="Previous page"
           onClick={flipPrev}
-          className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-14 flex items-center justify-center text-brass-400/70 hover:text-brass-400 active:text-cream-100 transition-colors"
+          className="notebook-nav-button left-2 sm:left-4"
         >
           <svg
             width="18"
@@ -178,7 +253,7 @@ export default function Notebook({ pages }: NotebookProps) {
           type="button"
           aria-label="Next page"
           onClick={flipNext}
-          className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-14 flex items-center justify-center text-brass-400/70 hover:text-brass-400 active:text-cream-100 transition-colors"
+          className="notebook-nav-button right-2 sm:right-4"
         >
           <svg
             width="18"
