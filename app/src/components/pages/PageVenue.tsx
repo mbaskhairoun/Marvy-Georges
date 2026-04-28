@@ -46,16 +46,16 @@ function GoldDivider({ width = 180 }: { width?: number }) {
 
 export default function PageVenue() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
+    <div className="h-full w-full paper-bg invitation-page relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
       <div className="relative z-10 flex-1 min-h-0 flex flex-col items-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
-          The Place
+        <p className="page-kicker mb-2">
+          The Spot
         </p>
 
         <div className="h-px w-14 bg-rust-600/20 mb-3" />
 
         <div
-          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg flex-1 min-h-[140px] w-full mb-4"
+          className="page-photo relative flex-1 min-h-[140px] w-full mb-4"
           style={{ filter: "sepia(0.15) saturate(0.9)" }}
         >
           <img
@@ -63,12 +63,11 @@ export default function PageVenue() {
             alt="The Hare Wine Co. entrance"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 ring-1 ring-inset ring-cream-100/40 rounded-2xl pointer-events-none" />
+          <div className="absolute inset-0 ring-1 ring-inset ring-cream-100/40 pointer-events-none" />
         </div>
 
         <h2
-          className="font-display text-ink-900 text-[2rem] sm:text-4xl leading-[1.05]"
-          style={{ letterSpacing: "-0.01em" }}
+          className="page-title text-[2rem] sm:text-[2.55rem]"
         >
           The Hare
           <br />
@@ -79,22 +78,22 @@ export default function PageVenue() {
           <GoldDivider width={140} />
         </div>
 
-        <p className="text-[10px] tracking-[0.35em] uppercase text-ink-900 font-serif leading-relaxed max-w-[20rem]">
+        <p className="text-[10px] tracking-[0.24em] uppercase text-ink-900/80 font-sans leading-relaxed max-w-[20rem]">
           {invitation.venue.address}
         </p>
 
         <div className="h-px w-20 bg-rust-600/20 my-3" />
 
-        <p className="font-serif italic text-ink-700 text-[13.5px] leading-snug max-w-[22rem]">
-          A rustic winery wrapped in brick, barrels, and string lights
-          on the Niagara Peninsula.
+        <p className="page-copy font-serif italic max-w-[22rem]">
+          A cozy winery with brick walls, barrel rooms, string lights,
+          and plenty of Niagara charm.
         </p>
 
         <a
           href={invitation.venue.mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center justify-center px-5 py-2 rounded-full border border-rust-600 text-rust-600 text-[11px] tracking-[0.35em] uppercase font-sans hover:bg-rust-600/10 transition-colors"
+          className="quiet-button mt-4 inline-flex items-center justify-center px-5 py-2"
         >
           Open in Maps
         </a>

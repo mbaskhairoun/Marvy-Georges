@@ -83,12 +83,12 @@ function EnvelopeIcon() {
 
 export default function PageRSVP() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
+    <div className="h-full w-full paper-bg invitation-page relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(60,30,10,0.12)_100%)]" />
 
       <div className="relative z-10 flex-1 min-h-0 flex flex-col items-center justify-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
-          Répondez s'il vous plaît
+        <p className="page-kicker mb-2">
+          Save your spot
         </p>
 
         <div className="h-px w-14 bg-rust-600/20 mb-3" />
@@ -98,32 +98,31 @@ export default function PageRSVP() {
         </div>
 
         <h2
-          className="font-display text-ink-900 text-[2.25rem] sm:text-5xl leading-[0.95]"
-          style={{ letterSpacing: "-0.01em" }}
+          className="page-title text-[2.25rem] sm:text-[3rem]"
         >
-          Kindly
+          RSVP
           <br />
-          Reply
+          Soon
         </h2>
 
         <div className="my-3">
           <GoldDivider width={150} />
         </div>
 
-        <p className="font-serif italic text-ink-700 text-[13.5px] leading-snug max-w-[20rem] mb-4">
-          Your invitation will unlock a private RSVP page here —
-          please check back soon. We'll write when it's ready.
+        <p className="page-copy font-serif italic max-w-[20rem] mb-4">
+          We'll open this up soon so you can let us know you're coming.
+          Check back here when the RSVP is ready.
         </p>
 
         <div className="w-full max-w-xs">
           <input
             disabled
-            placeholder="Look up your name…"
-            className="w-full px-4 py-2.5 rounded-full bg-cream-100/70 border border-brass-500/60 text-sm font-serif italic text-ink-700 placeholder:text-ink-700/50 text-center disabled:cursor-not-allowed focus:outline-none"
+            placeholder="Look up your name..."
+            className="w-full px-4 py-2.5 rounded-full bg-cream-100/70 border border-brass-500/50 text-sm font-serif italic text-ink-700 placeholder:text-ink-700/50 text-center disabled:cursor-not-allowed focus:outline-none"
           />
           <button
             disabled
-            className="mt-2 w-full px-5 py-2.5 rounded-full border border-brass-500/70 bg-transparent text-rust-600 text-[11px] tracking-[0.35em] uppercase font-sans disabled:cursor-not-allowed opacity-70"
+            className="quiet-button mt-2 w-full px-5 py-2.5 disabled:cursor-not-allowed opacity-70"
           >
             Find my invitation
           </button>

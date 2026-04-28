@@ -75,19 +75,18 @@ function VineOrnament() {
 
 export default function PageWelcome() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
+    <div className="h-full w-full paper-bg invitation-page relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(60,30,10,0.12)_100%)]" />
 
       <div className="relative z-10 flex-1 min-h-0 flex flex-col items-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
-          Chapter One
+        <p className="page-kicker mb-2">
+          The beginning
         </p>
 
         <div className="h-px w-14 bg-rust-600/20 mb-3" />
 
         <h2
-          className="font-display text-ink-900 text-[2.25rem] sm:text-5xl leading-[1.02] mb-3"
-          style={{ letterSpacing: "-0.01em" }}
+          className="page-title text-[2.15rem] sm:text-[2.9rem] mb-3"
         >
           A love story,
           <br />
@@ -98,14 +97,14 @@ export default function PageWelcome() {
           <GoldDivider width={150} />
         </div>
 
-        <p className="font-serif italic text-ink-700 text-[13.5px] leading-snug mb-3 max-w-[22rem]">
-          We fell in love slowly, and then all at once. Please celebrate
-          with us among barrels, brick, and candlelight — somewhere
-          beautiful between the vines and the lake.
+        <p className="page-copy font-serif italic mb-3 max-w-[22rem]">
+          We fell in love slowly, and then all at once. Join us for a night
+          tucked between barrels, brick, candlelight, and a little Niagara
+          magic.
         </p>
 
         <div
-          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg flex-1 min-h-0 w-full"
+          className="page-photo relative flex-1 min-h-0 w-full"
           style={{ filter: "sepia(0.15) saturate(0.9)" }}
         >
           <img
@@ -113,7 +112,7 @@ export default function PageWelcome() {
             alt="cheers"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 ring-1 ring-inset ring-cream-100/40 rounded-2xl pointer-events-none" />
+          <div className="absolute inset-0 ring-1 ring-inset ring-cream-100/40 pointer-events-none" />
         </div>
 
         <div className="mt-3 mb-1">

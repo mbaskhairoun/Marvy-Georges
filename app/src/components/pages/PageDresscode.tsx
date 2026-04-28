@@ -108,12 +108,12 @@ export default function PageDresscode() {
   ];
 
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-6 pt-10 pb-14">
+    <div className="h-full w-full paper-bg invitation-page relative overflow-hidden flex flex-col p-6 pt-10 pb-12">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(60,30,10,0.12)_100%)]" />
 
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
-          Attire
+        <p className="page-kicker mb-2">
+          What to wear
         </p>
 
         <div className="h-px w-16 bg-rust-600/20 mb-6" />
@@ -125,8 +125,7 @@ export default function PageDresscode() {
         </div>
 
         <h2
-          className="font-display text-ink-900 text-5xl sm:text-6xl leading-[0.95]"
-          style={{ letterSpacing: "-0.01em" }}
+          className="page-title text-[2.7rem] sm:text-[3.4rem]"
         >
           Cocktail
           <br />
@@ -137,8 +136,8 @@ export default function PageDresscode() {
           <GoldDivider width={160} />
         </div>
 
-        <p className="font-serif italic text-ink-700 text-[15px] leading-relaxed max-w-[18rem] mb-9">
-          Light & airy suits and dresses. Think linen, cream, sage,
+        <p className="page-copy font-serif italic max-w-[18rem] mb-8">
+          Light and airy suits and dresses. Think linen, cream, sage,
           and summer wine.
         </p>
 
@@ -146,14 +145,14 @@ export default function PageDresscode() {
           {swatches.map((s) => (
             <div key={s.name} className="flex flex-col items-center gap-2">
               <div
-                className="w-10 h-10 rounded-full shadow-inner"
+                className="w-9 h-9 rounded-full shadow-inner"
                 style={{
                   background: s.color,
                   boxShadow:
                     "inset 0 0 0 1.5px rgba(231,199,122,0.9), 0 1px 2px rgba(60,30,10,0.15)",
                 }}
               />
-              <span className="text-[9px] tracking-[0.3em] uppercase text-ink-700/70 font-serif italic">
+              <span className="text-[9px] tracking-[0.24em] uppercase text-ink-700/70 font-sans">
                 {s.name}
               </span>
             </div>

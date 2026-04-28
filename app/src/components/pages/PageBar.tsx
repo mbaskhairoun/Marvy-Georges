@@ -95,16 +95,16 @@ function WineGlassIcon() {
 
 export default function PageBar() {
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
+    <div className="h-full w-full paper-bg invitation-page relative overflow-hidden flex flex-col px-6 pt-6 pb-6">
       <div className="relative z-10 flex-1 min-h-0 flex flex-col items-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
-          Libations
+        <p className="page-kicker mb-2">
+          Drinks
         </p>
 
         <div className="h-px w-14 bg-rust-600/20 mb-3" />
 
         <div
-          className="relative rounded-2xl overflow-hidden ring-1 ring-rust-600/20 shadow-lg flex-1 min-h-[140px] w-full mb-3"
+          className="page-photo relative flex-1 min-h-[140px] w-full mb-3"
           style={{ filter: "sepia(0.15) saturate(0.9)" }}
         >
           <img
@@ -113,7 +113,7 @@ export default function PageBar() {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-ink-900/30 to-transparent" />
-          <div className="absolute inset-0 ring-1 ring-inset ring-cream-100/40 rounded-2xl pointer-events-none" />
+          <div className="absolute inset-0 ring-1 ring-inset ring-cream-100/40 pointer-events-none" />
         </div>
 
         <div className="flex items-center justify-center mb-1">
@@ -121,23 +121,24 @@ export default function PageBar() {
         </div>
 
         <h2
-          className="font-display text-ink-900 text-[2.25rem] sm:text-5xl leading-[1]"
-          style={{ letterSpacing: "-0.01em" }}
+          className="page-title text-[1.95rem] sm:text-[2.55rem]"
         >
-          An Open Bar
+          Drinks, Toasts
+          <br />
+          &amp; Good Company
         </h2>
 
         <div className="my-3">
           <GoldDivider width={150} />
         </div>
 
-        <p className="font-serif italic text-ink-700 text-[13.5px] leading-snug max-w-[22rem]">
-          Wines from the house, cocktails by the barrel, and toasts all
-          around. Come thirsty, leave merry.
+        <p className="page-copy font-serif italic max-w-[22rem]">
+          Wine, cocktails, and a few favorite pours will be flowing all
+          night. Grab a glass and come find us on the dance floor.
         </p>
 
-        <p className="font-hand text-2xl text-rust-600 mt-3">
-          to love &amp; long pours
+        <p className="font-serif italic text-lg text-rust-600 mt-3">
+          cheers to love and late-night laughs
         </p>
       </div>
     </div>

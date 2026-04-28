@@ -57,13 +57,11 @@ export default function PageDate() {
   }, []);
 
   return (
-    <div className="h-full w-full paper-bg rounded-3xl shadow-paper relative overflow-hidden flex flex-col p-6 pt-10 pb-14">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(60,30,10,0.14)_100%)]" />
+    <div className="h-full w-full paper-bg invitation-page relative overflow-hidden flex flex-col p-6 pt-10 pb-12">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(60,30,10,0.12)_100%)]" />
 
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center">
-        <p className="text-[10px] tracking-[0.55em] uppercase text-rust-700/80 font-sans mb-2">
-          Save the Date
-        </p>
+        <p className="page-kicker mb-2">Mark the calendar</p>
 
         <div className="h-px w-16 bg-rust-600/20 mb-6" />
 
@@ -71,37 +69,30 @@ export default function PageDate() {
           <GoldDivider width={150} />
         </div>
 
-        <p className="font-serif text-[11px] tracking-[0.55em] uppercase text-rust-700 mb-3">
-          Tuesday
-        </p>
+        <p className="page-kicker text-rust-700 mb-3">Tuesday</p>
 
-        <h2
-          className="font-display gilded leading-none text-[9rem] sm:text-[10rem]"
-          style={{ letterSpacing: "-0.03em" }}
-        >
+        <h2 className="page-title gilded leading-none text-[7.6rem] sm:text-[9rem]">
           30
         </h2>
 
-        <p className="font-serif text-[11px] tracking-[0.4em] uppercase text-brass-500 mt-3">
-          June · MMXXVI
-        </p>
+        <p className="page-kicker text-brass-500 mt-3">June 2026</p>
 
         <div className="my-6">
           <GoldDivider width={150} />
         </div>
 
-        <p className="font-serif italic text-xl text-ink-900">
-          six o'clock in the evening
+        <p className="font-serif italic text-lg text-ink-900">
+          6 o'clock in the evening
         </p>
 
-        <p className="font-serif italic text-xs text-ink-700/70 mt-6 max-w-[18rem] leading-relaxed">
-          June 30th is a Tuesday — but Canada Day is the very next day,
-          so everyone is off.
+        <p className="page-copy font-serif italic text-xs mt-6 max-w-[18rem]">
+          It's a Tuesday, but Canada Day is the next morning. Sleep in,
+          recover, and make a long weekend of it.
         </p>
 
         {days !== null && (
           <p className="mt-8 font-serif italic text-xs text-rust-600/80 tracking-[0.2em]">
-            — {days} days from today —
+            {days} days from today
           </p>
         )}
       </div>

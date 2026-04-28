@@ -31,9 +31,9 @@ export default {
         },
       },
       fontFamily: {
-        display: ['"Italiana"', "serif"],
+        display: ['"Playfair Display"', "serif"],
         serif: ['"Cormorant Garamond"', "serif"],
-        hand: ['"Parisienne"', "cursive"],
+        hand: ['"Cormorant Garamond"', "serif"],
         sans: ['"Inter"', "system-ui", "sans-serif"],
       },
       boxShadow: {

@@ -43,7 +43,7 @@ export default function Notebook({ pages }: NotebookProps) {
     const api = (bookRef.current as { pageFlip?: () => unknown } | null)?.pageFlip?.() as
       | { flipPrev?: (corner?: "top" | "bottom") => void }
       | undefined;
-    api?.flipPrev?.("bottom");
+    api?.flipPrev?.("top");
   }, []);
 
   const flipNext = useCallback(() => {
@@ -51,7 +51,7 @@ export default function Notebook({ pages }: NotebookProps) {
     const api = (bookRef.current as { pageFlip?: () => unknown } | null)?.pageFlip?.() as
       | { flipNext?: (corner?: "top" | "bottom") => void }
       | undefined;
-    api?.flipNext?.("bottom");
+    api?.flipNext?.("top");
   }, []);
 
   const handleTapZone = useCallback(
@@ -151,22 +151,15 @@ export default function Notebook({ pages }: NotebookProps) {
       onTouchStartCapture={handleTouchStartCapture}
       onTouchEndCapture={handleTouchEndCapture}
     >
-      {/* Dark leather backdrop */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 30%, #2c1c10 0%, #1a0e07 55%, #0c0604 100%)",
-        }}
-      />
-      <div className="pointer-events-none absolute inset-0 opacity-50 mix-blend-multiply bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(0,0,0,0.6)_100%)]" />
+      <div className="absolute inset-0 brick-wall-bg" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,9,5,0.2),rgba(16,9,5,0.58)),radial-gradient(ellipse_at_center,transparent_42%,rgba(11,10,6,0.74)_100%)]" />
 
       {/* Ground shadow */}
       <div
         className="absolute left-1/2 -translate-x-1/2 rounded-full bg-black/60 blur-xl"
         style={{
           width: size.w * 0.9,
-          height: 20,
+          height: 18,
           bottom: `calc(50% - ${size.h / 2 + 24}px)`,
         }}
       />
