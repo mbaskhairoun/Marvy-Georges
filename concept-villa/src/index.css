@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'Lora', Georgia, serif;
+  background-color: #2b1810;
+  color: #f5ede0;
+  /* A faint warm grain across the whole page so it feels like aged paper. */
+  background-image: radial-gradient(
+      ellipse at 20% 10%,
+      rgba(184, 149, 106, 0.06) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 80% 90%,
+      rgba(90, 58, 34, 0.18) 0%,
+      transparent 50%
+    );
+}
+
+/* Sepia / black-and-white helpers for placeholder photography */
+.sepia-soft {
+  filter: sepia(0.45) saturate(0.85) contrast(1.02) brightness(0.92);
+}
+.bw-warm {
+  filter: grayscale(1) sepia(0.35) brightness(0.92) contrast(1.05);
+}
+
+/* Tracked small caps used throughout */
+.smallcaps {
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+}
+
+/* The stylized italic ampersand used in the names */
+.amp {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-feature-settings: 'salt' 1, 'ss01' 1;
+}
+
+/* Honey-gilded gradient text used for the monogram */
+.gilded {
+  background: linear-gradient(
+    135deg,
+    #8a6a32 0%,
+    #e7c77a 35%,
+    #b8956a 65%,
+    #8a6a32 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hairline rule used between sections */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(184, 149, 106, 0.55) 50%,
+    transparent 100%
+  );
+}
+
+/* Smooth in-page scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #170c06;
+}
+::-webkit-scrollbar-thumb {
+  background: #4a2d1c;
+  border-radius: 4px;
+}
